@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Brandon Montezuma | AR Card</title>
+    <script src="mindar/mindar-image.prod.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+      body, html { margin: 0; padding: 0; overflow: hidden; }
+      canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <div id="ar-container"></div>
+
+    <div id="overlay" style="display: none;">
+      <div id="profile">
+        <img id="profile-pic" src="./assets/brandon.jpg" alt="Brandon Montezuma">
+        <div id="bio">
+          <h2>Brandon Montezuma</h2>
+          <p>AR/VR Dev | Unity • Unreal • WebAR | Co-Founder of Bloodglyph</p>
+        </div>
+      </div>
+      <div id="links">
+        <a href="https://www.linkedin.com/in/brandon-montezuma/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/Bmontezuma" target="_blank">GitHub</a>
+        <a href="https://drive.google.com/file/d/16XDRqPw3TYuBo62QWhUrda-4ee42zZpf/view?usp=drive_link" target="_blank">Resume</a>
+        <a href="https://www.artstation.com/brandonmontezuma6" target="_blank">ArtStation</a>
+        <a href="https://brandonmontezuma.wixsite.com/brandon-montezuma-3" target="_blank">Wix Site</a>
+      </div>
+    </div>
+
+    <script type="module">
+      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
+      import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image-three.prod.js';
+
+      const mindarThree = new MindARThree({
+        container: document.querySelector("#ar-container"),
+        imageTargetSrc: './target.mind',
+      });
+
+      const { renderer, scene, camera } = mindarThree;
+
+      const anchor = mindarThree.addAnchor(0);
+
+      anchor.onTargetFound = () => {
+        document.getElementById("overlay").style.display = "block";
+      };
+
+      anchor.onTargetLost = () => {
+        document.getElementById("overlay").style.display = "none";
+      };
+
+      await mindarThree.start();
+      renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+      });
+    </script>
+  </body>
+</html>
