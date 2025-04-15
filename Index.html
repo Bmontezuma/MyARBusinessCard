@@ -1,26 +1,65 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Brandon Montezuma | AR Card</title>
-    <script src="mindar/mindar-image.prod.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <style>
-      body, html { margin: 0; padding: 0; overflow: hidden; }
-      canvas { display: block; }
-    </style>
-  </head>
-  <body>
-    <div id="ar-container"></div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Brandon Montezuma | WebAR Card</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
 
-    <div id="overlay" style="display: none;">
-      <div id="profile">
-        <img id="profile-pic" src="./assets/brandon.jpg" alt="Brandon Montezuma">
-        <div id="bio">
-          <h2>Brandon Montezuma</h2>
-          <p>AR/VR Dev | Unity • Unreal • WebAR | Co-Founder of Bloodglyph</p>
-        </div>
-      </div>
+    #overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      z-index: 10;
+      display: none;
+      max-width: 90vw;
+    }
+
+    #profile-pic {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid white;
+      object-fit: cover;
+      float: left;
+      margin-right: 1rem;
+    }
+
+    #links a {
+      display: inline-block;
+      margin: 0.3rem 0.3rem 0 0;
+      padding: 0.5rem 1rem;
+      background: #333;
+      color: #fff;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    #links a:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="overlay">
+    <img id="profile-pic" src="assets/brandon.jpg" alt="Brandon">
+    <div>
+      <h2>Brandon Montezuma</h2>
+      <p>AR/VR Dev | Unity • Unreal • WebAR | Co-Founder of Bloodglyph</p>
       <div id="links">
         <a href="https://www.linkedin.com/in/brandon-montezuma/" target="_blank">LinkedIn</a>
         <a href="https://github.com/Bmontezuma" target="_blank">GitHub</a>
@@ -29,32 +68,26 @@
         <a href="https://brandonmontezuma.wixsite.com/brandon-montezuma-3" target="_blank">Wix Site</a>
       </div>
     </div>
+  </div>
 
-    <script type="module">
-      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
-      import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image-three.prod.js';
+  <a-scene embedded arjs="sourceType: webcam;">
+    <a-marker type="pattern" url="assets/marker.patt">
+      <a-box position="0 0.5 0" color="#FF4136"></a-box>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
 
-      const mindarThree = new MindARThree({
-        container: document.querySelector("#ar-container"),
-        imageTargetSrc: './target.mind',
-      });
+  <script>
+    const marker = document.querySelector('a-marker');
+    const overlay = document.getElementById('overlay');
 
-      const { renderer, scene, camera } = mindarThree;
+    marker.addEventListener('markerFound', () => {
+      overlay.style.display = 'block';
+    });
 
-      const anchor = mindarThree.addAnchor(0);
-
-      anchor.onTargetFound = () => {
-        document.getElementById("overlay").style.display = "block";
-      };
-
-      anchor.onTargetLost = () => {
-        document.getElementById("overlay").style.display = "none";
-      };
-
-      await mindarThree.start();
-      renderer.setAnimationLoop(() => {
-        renderer.render(scene, camera);
-      });
-    </script>
-  </body>
+    marker.addEventListener('markerLost', () => {
+      overlay.style.display = 'none';
+    });
+  </script>
+</body>
 </html>
